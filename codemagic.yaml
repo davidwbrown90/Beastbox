@@ -10,6 +10,14 @@ workflows:
       # without pasting the private key into environment variables.
       app_store_connect: "Beast Box"
     environment:
+      groups:
+        # Create this group in Codemagic UI -> your app -> Environment
+        # variables -> add a variable named CERTIFICATE_PRIVATE_KEY,
+        # assign it to a group named exactly "code-signing", tick Secure.
+        # This key is separate from the App Store Connect integration --
+        # it's what Codemagic uses to encrypt the new iOS distribution
+        # certificate it generates on the first build.
+        - code-signing
       vars:
         BUNDLE_ID: "com.beastbox.game" # matches capacitor.config.json
         XCODE_PROJECT: "ios/App/App.xcodeproj" # project, not workspace -- SPM, no CocoaPods here
