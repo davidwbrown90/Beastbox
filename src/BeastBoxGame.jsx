@@ -7,6 +7,12 @@ import { useState, useRef, useEffect, useCallback } from "react";
 // variation keeps calls from sounding canned.
 
 async function makeCtx(ref) {
+  // Safari/WKWebView treats Web Audio as "ambient" by default, which the
+  // hardware silent switch mutes. The AudioSession API (Safari-only) opts
+  // into "playback" so sound comes through regardless of the switch.
+  if ("audioSession" in navigator) {
+    try { navigator.audioSession.type = "playback"; } catch (e) { /* unsupported */ }
+  }
   if (!ref.current) {
     ref.current = new (window.AudioContext || window.webkitAudioContext)();
   }
