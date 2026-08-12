@@ -8,7 +8,7 @@ workflows:
       # Connect → Users and Access → Integrations → App Store Connect API),
       # give the key this exact name, and it can be reused across workflows
       # without pasting the private key into environment variables.
-      app_store_connect: beastbox_asc_key
+      app_store_connect: "Beast Box"
     environment:
       vars:
         BUNDLE_ID: "com.beastbox.game" # matches capacitor.config.json
