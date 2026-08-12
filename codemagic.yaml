@@ -1,17 +1,15 @@
 workflows:
   ios-workflow:
     name: Beast Box iOS
+    integrations:
+      # Name of the API key connected under Codemagic → Team settings →
+      # Integrations → Developer Portal. Set this up once there (it asks
+      # for the same Issuer ID / Key ID / .p8 private key from App Store
+      # Connect → Users and Access → Integrations → App Store Connect API),
+      # give the key this exact name, and it can be reused across workflows
+      # without pasting the private key into environment variables.
+      app_store_connect: beastbox_asc_key
     environment:
-      groups:
-        # Create this group in Codemagic UI → Team settings → Environment
-        # variable groups, named exactly "app_store_credentials", containing:
-        #   APP_STORE_CONNECT_ISSUER_ID
-        #   APP_STORE_CONNECT_KEY_IDENTIFIER
-        #   APP_STORE_CONNECT_PRIVATE_KEY
-        # All three come from App Store Connect → Users and Access →
-        # Integrations → App Store Connect API (create a key with "App
-        # Manager" access). See docs.codemagic.io/code-signing-yaml/signing-ios/
-        - app_store_credentials
       vars:
         BUNDLE_ID: "com.beastbox.game" # matches capacitor.config.json
         XCODE_PROJECT: "ios/App/App.xcodeproj" # project, not workspace -- SPM, no CocoaPods here
@@ -63,9 +61,7 @@ workflows:
       - /tmp/xcodebuild_logs/*.log
     publishing:
       app_store_connect:
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
-        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        auth: integration
         # Starts false on purpose -- confirm the .ipa actually builds and
         # signs correctly first, then flip to true once you're ready to
         # have every successful build land in TestFlight automatically.
